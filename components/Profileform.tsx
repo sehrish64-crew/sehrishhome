@@ -9,7 +9,7 @@ export default function ProfileForm() {
         <h2 className="text-[#475467] font-medium">Personal</h2>
         <hr className="mt-1 mb-6 border-gray-200" />
 
-        <div className="flex gap-6">
+        <div className="flex md:flex-row gap-6 flex-col">
           {/* Profile Image */}
           <div className="flex-shrink-0">
             <Image
@@ -88,7 +88,7 @@ export default function ProfileForm() {
         <h2 className="text-[#475467] font-medium">Clinic</h2>
         <hr className="mt-1 mb-6 border-gray-200" />
 
-        <div className="flex gap-6">
+        <div className="flex md:flex-row gap-6 flex-col">
           {/* Clinic Logo */}
           <div className="flex-shrink-0">
             <Image

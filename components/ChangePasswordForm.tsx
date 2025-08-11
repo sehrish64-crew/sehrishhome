@@ -10,7 +10,7 @@ export default function ChangePasswordForm() {
     <div className="max-w-4xl bg-white rounded-2xl p-6 mr-10">
       <form className="space-y-6">
         {/* Current Password */}
-        <div className="flex items-start gap-6">
+        <div className="flex items-start gap-6 flex-col md:flex-row">
           <label className="w-48 text-sm text-gray-700 mt-2">Current password</label>
           <input
             type={showPassword ? "text" : "password"}
@@ -19,7 +19,7 @@ export default function ChangePasswordForm() {
         </div>
 
         {/* New Password */}
-        <div className="flex items-start gap-6">
+        <div className="flex items-start gap-6 flex-col md:flex-row">
           <label className="w-48 text-sm text-gray-700 mt-2">New password</label>
           <div className="flex-1">
             <input
@@ -33,7 +33,7 @@ export default function ChangePasswordForm() {
         </div>
 
         {/* Confirm Password */}
-        <div className="flex items-start gap-6">
+        <div className="flex items-start gap-6 flex-col md:flex-row">
           <label className="w-48 text-sm text-gray-700 mt-2">Confirm new password</label>
           <input
             type={showPassword ? "text" : "password"}
@@ -42,7 +42,7 @@ export default function ChangePasswordForm() {
         </div>
 
         {/* Show Password Checkbox */}
-        <div className="flex items-center gap-2 pl-48">
+        <div className="flex items-center gap-2 md:pl-48 pl-0">
           <input
             id="showPassword"
             type="checkbox"
