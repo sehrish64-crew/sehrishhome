@@ -493,7 +493,7 @@ export default function Patientdetail() {
                         <input
                           className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
                           id="datepicker"
-                          type="text"
+                          type="date"
                         />
                       </div>
                       <div className="field" style={{ width: "100%" }}>
@@ -2367,27 +2367,12 @@ export default function Patientdetail() {
                         <div className="mt-2 relative w-full">
                           <input
                             id="datepicker"
-                            type="text"
+                            type="date"
                             className="block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
                             placeholder="Select date"
                           />
 
-                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 18 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M2.25 7.5H15.75M6 4.5V1.5M12 4.5V1.5M7.05 16.5H10.95C12.6302 16.5 13.4702 16.5 14.112 16.173C14.6765 15.8854 15.1354 15.4265 15.423 14.862C15.75 14.2202 15.75 13.3802 15.75 11.7V7.8C15.75 6.11984 15.75 5.27976 15.423 4.63803C15.1354 4.07354 14.6765 3.6146 14.112 3.32698C13.4702 3 12.6302 3 10.95 3H7.05C5.36984 3 4.52976 3 3.88803 3.32698C3.32354 3.6146 2.8646 4.07354 2.57698 4.63803C2.25 5.27976 2.25 6.11984 2.25 7.8V11.7C2.25 13.3802 2.25 14.2202 2.57698 14.862C2.8646 15.4265 3.32354 15.8854 3.88803 16.173C4.52976 16.5 5.36984 16.5 7.05 16.5Z"
-                                stroke="#A1A5AA"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                              />
-                            </svg>
-                          </div>
+                         
                         </div>
                       </div>
 

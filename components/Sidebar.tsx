@@ -33,6 +33,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [activeItem, setActiveItem] = useState("Doctors");
 
+  const linkClasses = (href: string) =>
+    pathname === href
+      ? "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left bg-[#144A6C] text-white font-normal pl-6 [&>svg]:w-6 [&>svg]:h-6"
+      : "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left text-gray-700 hover:bg-gray-100 transition-colors";
+
+
   const sidebarItems: SidebarItem[] = [
     {
       icon: <LayoutDashboard className="w-5 h-5" />,
@@ -150,20 +156,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Bottom section */}
         <div className="mt-8 space-y-1 flex-shrink-0">
-          <Link
-            href="/support"
-            onClick={onClose}
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left text-gray-700 hover:bg-gray-200 transition-colors"
-          >
+          <Link href="/support" onClick={onClose} className={linkClasses("/support")}>
             <HelpCircle className="w-5 h-5" />
             <span className="font-medium">Support</span>
           </Link>
 
-          <Link
-            href="/logout"
-            onClick={onClose}
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left text-gray-700 hover:bg-gray-200 transition-colors"
-          >
+          <Link href="/login" onClick={onClose} className={linkClasses("/logout")}>
             <LogOut className="w-5 h-5" />
             <span className="font-medium">Log out</span>
           </Link>

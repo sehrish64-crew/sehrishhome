@@ -79,7 +79,7 @@ export default function Header({
       <div className="flex items-center space-x-2 lg:space-x-4">
         {/* Settings - Hidden on small screens */}
         <Link
-          href="/settings"
+          href="/setting"
           className="w-none lg:w-[44] text-[#144A6C] text-center font-regular transition-colors whitespace-nowrap bg-[#FAFAFA] px-4 py-2 rounded-lg shadow-sm border border-[#F0F0F0] md:flex items-center space-x-2 text-center justify-center"
         >
           <Settings className="w-4 h-4" />

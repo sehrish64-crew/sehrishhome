@@ -3,17 +3,6 @@
 import { Search, Plus } from "lucide-react";
 import { Listbox } from "@headlessui/react";
 import { ChevronDownIcon, CheckIcon } from "@heroicons/react/20/solid";
-import dynamic from "next/dynamic";
-
-const Apex = dynamic(() => import("../components/Apexchart"), {
-    ssr: false,
-});
-const StackedAreaChart = dynamic(
-    () => import("../components/StackedAreaChart"),
-    {
-        ssr: false,
-    }
-);
 
 interface Doctor {
     id: string;
@@ -41,14 +30,6 @@ interface Subscription {
     expires: string;
 }
 
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../components/ui/select";
-import DateCom from "../components/Datepicker";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useForm } from "react-hook-form";
@@ -248,43 +229,58 @@ export default function Patient() {
         }
 
     ];
-    const toggleView = () => {
-        setactivebtn((prev) => (prev === "list" ? "graph" : "list"));
-    };
+    const increase = [
+        { id: 1, name: "5%", discount: "2%" },
+        { id: 2, name: "10%", discount: "5%" },
+        { id: 3, name: "15%", discount: "7%" },
+    ];
 
-    const costTypes = [
-        { id: 1, label: "Cash" },
-        { id: 2, label: "Credit Card" },
-        { id: 3, label: "Insurance" },
+    const profits = [
+        { id: 1, name: "Gross Profit" },
+        { id: 2, name: "Net Profit" },
+        { id: 3, name: "Operating Profit" },
     ];
-    const materialList = [
-        { id: 1, name: "Gloves" },
-        { id: 2, name: "Syringes" },
-        { id: 3, name: "Bandages" },
-        { id: 4, name: "Face Masks" },
-    ];
-    const treatments = [
-        { id: 1, name: "package 1" },
-        { id: 2, name: "package 2" },
-        { id: 3, name: "package 3" },
-    ];
+
     const expenses = [
         {
             id: 1,
-            title: "INV-00295",
-            category: "Alice Johnson",
-            date: "Alice Johnson",
-            amount: "Parent",
-            dates: "18-08-2024",
-            paid: "$ 1000",
+            doctor: "Dr. Khan",
+            patient: "Ali Raza",
+            treatment: "Dental Cleaning",
+            invoiceDate: "2025-08-01",
+            totalAmount: 5000,
+            paidAmount: 3000,
+            remaining: 2000,
+            status: "Unpaid",
+        },
+        {
+            id: 2,
+            doctor: "Dr. Sara",
+            patient: "Fatima Noor",
+            treatment: "Root Canal",
+            invoiceDate: "2025-08-03",
+            totalAmount: 8000,
+            paidAmount: 8000,
+            remaining: 0,
+            status: "Paid",
+        },
+        {
+            id: 3,
+            doctor: "Dr. Ahmad",
+            patient: "Usman Tariq",
+            treatment: "Filling",
+            invoiceDate: "2025-08-05",
+            totalAmount: 3000,
+            paidAmount: 1000,
+            remaining: 2000,
+            status: "Unpaid",
         },
     ];
 
     const frequencyOptions = [
-        { id: 1, name: "Daily" },
-        { id: 2, name: "Weekly" },
-        { id: 3, name: "Monthly" },
-        { id: 4, name: "Yearly" },
+        { id: 1, name: "Check" },
+        { id: 2, name: "Card Via" },
+        { id: 3, name: "Online Transfer" },
     ];
     const clients = [
         { id: 1, name: "John Doe", email: "john@example.com" },
@@ -301,18 +297,13 @@ export default function Patient() {
         { id: 2, name: "Follow-up" },
         { id: 3, name: "X-Ray Evaluation" },
     ];
-    const profits = [
-        { id: 1, name: "Gross Profit" },
-        { id: 2, name: "Net Profit" },
-        { id: 3, name: "Operating Profit" }
-    ];
+    const [selectedIncrease, setSelectedIncrease] = useState(increase[0]);
+
     const [selectedCheckup, setSelectedCheckup] = useState(checkups[0]);
     const [selectedProfit, setSelectedProfit] = useState(profits[0]);
     const [selectedPatient, setSelectedPatient] = useState(patients[0]);
-    const [selectedFrequency, setSelectedFrequency] = useState(frequencyOptions[0]);
+    const [selectedFrequency, setSelectedFrequency] = useState({ id: 1, name: "Check" });
     const [selectedClient, setSelectedClient] = useState(clients[0]);
-    const [selectedMaterial, setSelectedMaterial] = useState(null)
-    const [selectedCostType, setSelectedCostType] = useState(costTypes[0]);
     const [searchTerm, setSearchTerm] = useState("");
     const filteredDoctors = doctors.filter((doctor) =>
         doctor.fullName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -324,17 +315,12 @@ export default function Patient() {
         formState: { errors },
     } = useForm();
     const [selectedTab, setSelectedTab] = useState(0);
-    const tabs = ["Invoices", "Quotes"];
-    const [selectedUser, setSelectedUser] = useState(userList[0]);
-    const [isRestockModalOpen, setIsRestockModalOpen] = useState(false);
-    const [restockModalAnim, setRestockModalAnim] = useState(false);
-    const [activebtn, setactivebtn] = useState("list");
+    const tabs = ["Quotes", "Invoices"];
     const [ShowClinicModal, setShowClinicModal] = useState(false);
     const [EditClinicModal, setEditClinicModal] = useState(false);
     const [ViewClinicModal, setViewClinicModal] = useState(false);
     const [ApprovedClinic, setApprovedClinic] = useState(false);
     const [ClinicModalAnimation, setClinicModalAnimation] = useState(false);
-    const [selectedTreatment, setSelectedTreatment] = useState(treatments[0]);
     const [showExpenseModal, setShowExpenseModal] = useState(false);
     const [expenseModalAnimation, setExpenseModalAnimation] = useState(false);
     return (
@@ -910,28 +896,31 @@ export default function Patient() {
                                                                             </label>
                                                                             <div className="flex gap-2">
 
-                                                                                <Listbox value={selectedProfit} onChange={setSelectedProfit}>
+                                                                                <Listbox value={selectedIncrease} onChange={setSelectedIncrease}>
                                                                                     <div className="relative mt-2">
                                                                                         <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-3 pl-3 pr-10 text-left shadow-sm border border-[#EBEBEB] focus:outline-none focus:ring-1 focus:ring-[#EBEBEB] focus:border-[#EBEBEB] sm:text-sm">
-                                                                                            <span className="block truncate">{selectedProfit.name}</span>
+                                                                                            <span className="block truncate">
+                                                                                                {selectedIncrease.name} — {selectedIncrease.discount}
+                                                                                            </span>
                                                                                             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                                                                                 <ChevronDownIcon className="h-5 w-5 text-[#144A6C]" aria-hidden="true" />
                                                                                             </span>
                                                                                         </Listbox.Button>
 
                                                                                         <Listbox.Options className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                                                                            {profits.map((profit) => (
+                                                                                            {increase.map((item) => (
                                                                                                 <Listbox.Option
-                                                                                                    key={profit.id}
-                                                                                                    value={profit}
+                                                                                                    key={item.id}
+                                                                                                    value={item}
                                                                                                     className={({ active }) =>
-                                                                                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-[#144A6C] text-white" : "text-gray-900"}`
+                                                                                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-[#144A6C] text-white" : "text-gray-900"
+                                                                                                        }`
                                                                                                     }
                                                                                                 >
                                                                                                     {({ selected }) => (
                                                                                                         <>
                                                                                                             <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
-                                                                                                                {profit.name}
+                                                                                                                {item.name} — {item.discount}
                                                                                                             </span>
                                                                                                             {selected && (
                                                                                                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-indigo-600">
@@ -945,7 +934,6 @@ export default function Patient() {
                                                                                         </Listbox.Options>
                                                                                     </div>
                                                                                 </Listbox>
-
                                                                                 <input
                                                                                     className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
                                                                                     id="clinic-address"
@@ -1012,7 +1000,7 @@ export default function Patient() {
                                                                 setClinicModalAnimation(false);
                                                             }}
                                                         >
-                                                            Update
+                                                            sss
                                                         </button>
                                                         <button
                                                             type="button"
@@ -1409,28 +1397,31 @@ export default function Patient() {
                                                                             </label>
                                                                             <div className="flex gap-2">
 
-                                                                                <Listbox value={selectedProfit} onChange={setSelectedProfit}>
+                                                                                <Listbox value={selectedIncrease} onChange={setSelectedIncrease}>
                                                                                     <div className="relative mt-2">
                                                                                         <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-3 pl-3 pr-10 text-left shadow-sm border border-[#EBEBEB] focus:outline-none focus:ring-1 focus:ring-[#EBEBEB] focus:border-[#EBEBEB] sm:text-sm">
-                                                                                            <span className="block truncate">{selectedProfit.name}</span>
+                                                                                            <span className="block truncate">
+                                                                                                {selectedIncrease.name} — {selectedIncrease.discount}
+                                                                                            </span>
                                                                                             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                                                                                 <ChevronDownIcon className="h-5 w-5 text-[#144A6C]" aria-hidden="true" />
                                                                                             </span>
                                                                                         </Listbox.Button>
 
                                                                                         <Listbox.Options className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                                                                            {profits.map((profit) => (
+                                                                                            {increase.map((item) => (
                                                                                                 <Listbox.Option
-                                                                                                    key={profit.id}
-                                                                                                    value={profit}
+                                                                                                    key={item.id}
+                                                                                                    value={item}
                                                                                                     className={({ active }) =>
-                                                                                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-[#144A6C] text-white" : "text-gray-900"}`
+                                                                                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-[#144A6C] text-white" : "text-gray-900"
+                                                                                                        }`
                                                                                                     }
                                                                                                 >
                                                                                                     {({ selected }) => (
                                                                                                         <>
                                                                                                             <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
-                                                                                                                {profit.name}
+                                                                                                                {item.name} — {item.discount}
                                                                                                             </span>
                                                                                                             {selected && (
                                                                                                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-indigo-600">
@@ -1444,7 +1435,6 @@ export default function Patient() {
                                                                                         </Listbox.Options>
                                                                                     </div>
                                                                                 </Listbox>
-
                                                                                 <input
                                                                                     className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
                                                                                     id="clinic-address"
@@ -2194,28 +2184,31 @@ export default function Patient() {
                                                                                                     </label>
                                                                                                     <div className="flex gap-2">
 
-                                                                                                        <Listbox value={selectedProfit} onChange={setSelectedProfit}>
+                                                                                                        <Listbox value={selectedIncrease} onChange={setSelectedIncrease}>
                                                                                                             <div className="relative mt-2">
                                                                                                                 <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-3 pl-3 pr-10 text-left shadow-sm border border-[#EBEBEB] focus:outline-none focus:ring-1 focus:ring-[#EBEBEB] focus:border-[#EBEBEB] sm:text-sm">
-                                                                                                                    <span className="block truncate">{selectedProfit.name}</span>
+                                                                                                                    <span className="block truncate">
+                                                                                                                        {selectedIncrease.name} — {selectedIncrease.discount}
+                                                                                                                    </span>
                                                                                                                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                                                                                                         <ChevronDownIcon className="h-5 w-5 text-[#144A6C]" aria-hidden="true" />
                                                                                                                     </span>
                                                                                                                 </Listbox.Button>
 
                                                                                                                 <Listbox.Options className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                                                                                                    {profits.map((profit) => (
+                                                                                                                    {increase.map((item) => (
                                                                                                                         <Listbox.Option
-                                                                                                                            key={profit.id}
-                                                                                                                            value={profit}
+                                                                                                                            key={item.id}
+                                                                                                                            value={item}
                                                                                                                             className={({ active }) =>
-                                                                                                                                `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-[#144A6C] text-white" : "text-gray-900"}`
+                                                                                                                                `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-[#144A6C] text-white" : "text-gray-900"
+                                                                                                                                }`
                                                                                                                             }
                                                                                                                         >
                                                                                                                             {({ selected }) => (
                                                                                                                                 <>
                                                                                                                                     <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
-                                                                                                                                        {profit.name}
+                                                                                                                                        {item.name} — {item.discount}
                                                                                                                                     </span>
                                                                                                                                     {selected && (
                                                                                                                                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-indigo-600">
@@ -2229,7 +2222,6 @@ export default function Patient() {
                                                                                                                 </Listbox.Options>
                                                                                                             </div>
                                                                                                         </Listbox>
-
                                                                                                         <input
                                                                                                             className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
                                                                                                             id="clinic-address"
@@ -2296,7 +2288,7 @@ export default function Patient() {
                                                                                         setClinicModalAnimation(false);
                                                                                     }}
                                                                                 >
-                                                                                    Add Clinic
+                                                                                    Add Quote
                                                                                 </button>
                                                                                 <button
                                                                                     type="button"
@@ -2533,16 +2525,6 @@ export default function Patient() {
                                                     />
                                                 </div>
                                                 <div className="add_btn">
-                                                    <button
-                                                        onClick={() => {
-                                                            setShowExpenseModal(true);
-                                                            setTimeout(() => setExpenseModalAnimation(true), 10);
-                                                        }}
-                                                        className="bg-[#144A6C] pl-4 pr-6 py-2 text-white flex items-center space-x-2 rounded-lg transition-colors whitespace-nowrap"
-                                                    >
-                                                        <Plus className="w-6 h-6 text-white" />
-                                                        <span className="text-base font-regular">Add Expense</span>
-                                                    </button>
 
                                                     {showExpenseModal && (
                                                         <div
@@ -2613,7 +2595,7 @@ export default function Patient() {
                                                                                         </div>
                                                                                         <div className="flex flex-col">
                                                                                             <h3 className="text-lg font-regular text-[#144A6C] text-start">
-                                                                                                Record Expense
+                                                                                                Record Pyament
                                                                                             </h3>
                                                                                             <span className="text-[#A1A5AA] font-regular">
                                                                                                 Provide details to Record Payment
@@ -2636,7 +2618,7 @@ export default function Patient() {
                                                                                                                 value="Fixed"
                                                                                                                 className="form-radio text-blue-600"
                                                                                                             />
-                                                                                                            <span className="ml-2 font-normal">Fixed</span>
+                                                                                                            <span className="ml-2 font-normal">Partial Payment</span>
                                                                                                         </label>
                                                                                                         <label className="inline-flex items-center">
                                                                                                             <input
@@ -2645,88 +2627,30 @@ export default function Patient() {
                                                                                                                 value="Variable"
                                                                                                                 className="form-radio text-blue-600"
                                                                                                             />
-                                                                                                            <span className="ml-2">Variable</span>
+                                                                                                            <span className="ml-2">Full Payment</span>
                                                                                                         </label>
                                                                                                     </div>
                                                                                                 </div>
 
                                                                                                 {/* Occurrence */}
                                                                                                 <div>
-                                                                                                    <label className="block text-sm font-normal text-gray-700 mb-1">Occurrence</label>
+                                                                                                    <label className="block text-sm font-normal text-gray-700 mb-1">Pending Amount</label>
                                                                                                     <div className="flex gap-4">
-                                                                                                        <label className="inline-flex items-center">
-                                                                                                            <input
-                                                                                                                type="radio"
-                                                                                                                name="occurrence"
-                                                                                                                value="One-time"
-                                                                                                                className="form-radio text-blue-600"
-                                                                                                            />
-                                                                                                            <span className="ml-2">One-time</span>
-                                                                                                        </label>
-                                                                                                        <label className="inline-flex items-center">
-                                                                                                            <input
-                                                                                                                type="radio"
-                                                                                                                name="occurrence"
-                                                                                                                value="Recurring"
-                                                                                                                className="form-radio text-blue-600"
-                                                                                                            />
-                                                                                                            <span className="ml-2">Recurring</span>
-                                                                                                        </label>
+
+                                                                                                        <h2 className="text-2xl text-[#475467] font-bold">$13,408.17</h2>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-
                                                                                         <div className="flex flex-wrap -mx-3 mt-2 mb-4">
                                                                                             <div className="w-full px-3 mb-6 md:mb-0 text-start">
-                                                                                                <label className="text-[#757575]" htmlFor="clinic-name">
-                                                                                                    Expense Name
-                                                                                                </label>
-                                                                                                <input
-                                                                                                    className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
-                                                                                                    id="clinic-name"
-                                                                                                    type="text"
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <div className="flex flex-wrap -mx-3 mt-2 mb-4">
-                                                                                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0 text-start">
-                                                                                                <label className="text-[#757575]" htmlFor="clinic-email">
-                                                                                                    Email Address
-                                                                                                </label>
-                                                                                                <input
-                                                                                                    className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
-                                                                                                    id="clinic-email"
-                                                                                                    type="email"
-                                                                                                />
-                                                                                            </div>
-
-                                                                                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0 text-start">
-                                                                                                <label className="text-[#757575]" htmlFor="clinic-phone">
-                                                                                                    Phone Number
-                                                                                                </label>
-                                                                                                <input
-                                                                                                    className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
-                                                                                                    id="clinic-phone"
-                                                                                                    type="tel"
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div className="flex flex-wrap -mx-3 mt-2 mb-4">
-                                                                                            <div className="w-full px-3 mb-6 md:mb-0 text-start">
-                                                                                                <label className="text-[#757575]" htmlFor="clinic-address">
-                                                                                                    Frequency
-                                                                                                </label>
+                                                                                                <label className="text-[#757575]">Method</label>
                                                                                                 <Listbox value={selectedFrequency} onChange={setSelectedFrequency}>
                                                                                                     <div className="mt-2 relative">
                                                                                                         <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-3 pl-3 pr-10 text-left shadow-sm border border-[#EBEBEB] focus:outline-none focus:ring-1 focus:ring-[#EBEBEB] focus:border-[#EBEBEB] sm:text-sm">
                                                                                                             <span className="block truncate">{selectedFrequency.name}</span>
                                                                                                             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                                                                                                <ChevronDownIcon
-                                                                                                                    className="h-5 w-5 text-[#144A6C]"
-                                                                                                                    aria-hidden="true"
-                                                                                                                />
+                                                                                                                <ChevronDownIcon className="h-5 w-5 text-[#144A6C]" aria-hidden="true" />
                                                                                                             </span>
                                                                                                         </Listbox.Button>
 
@@ -2736,16 +2660,12 @@ export default function Patient() {
                                                                                                                     key={frequency.id}
                                                                                                                     value={frequency}
                                                                                                                     className={({ active }) =>
-                                                                                                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-[#144A6C] text-white" : "text-gray-900"
-                                                                                                                        }`
+                                                                                                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-[#144A6C] text-white" : "text-gray-900"}`
                                                                                                                     }
                                                                                                                 >
                                                                                                                     {({ selected }) => (
                                                                                                                         <>
-                                                                                                                            <span
-                                                                                                                                className={`block truncate ${selected ? "font-medium" : "font-normal"
-                                                                                                                                    }`}
-                                                                                                                            >
+                                                                                                                            <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
                                                                                                                                 {frequency.name}
                                                                                                                             </span>
                                                                                                                             {selected && (
@@ -2760,21 +2680,23 @@ export default function Patient() {
                                                                                                         </Listbox.Options>
                                                                                                     </div>
                                                                                                 </Listbox>
+                                                                                            </div>
+                                                                                        </div>
 
+                                                                                        {/* ✅ Conditionally render Check Number field only if selected is "Check" */}
+                                                                                        {selectedFrequency.name === "Check" && (
+                                                                                            <div className="flex flex-wrap -mx-3 mt-2 mb-4">
+                                                                                                <div className="w-full px-3 mb-6 md:mb-0 text-start">
+                                                                                                    <label className="text-[#757575]" htmlFor="check-number">Check Number</label>
+                                                                                                    <input
+                                                                                                        className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
+                                                                                                        id="check-number"
+                                                                                                        type="text"
+                                                                                                    />
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </div>
-                                                                                        <div className="flex flex-wrap -mx-3 mt-2 mb-4">
-                                                                                            <div className="w-full px-3 mb-6 md:mb-0 text-start">
-                                                                                                <label className="text-[#757575]" htmlFor="clinic-address">
-                                                                                                    Number of Period
-                                                                                                </label>
-                                                                                                <input
-                                                                                                    className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
-                                                                                                    id="clinic-address"
-                                                                                                    type="text"
-                                                                                                />
-                                                                                            </div>
-                                                                                        </div>
+                                                                                        )}
+
 
                                                                                         <div className="flex flex-wrap -mx-3 mt-2 mb-4">
                                                                                             <div className="w-full px-3 mb-6 md:mb-0 text-start">
@@ -2840,64 +2762,87 @@ export default function Patient() {
                                                 </div>
                                             </div>
                                             <div className="w-full overflow-x-auto mt-3">
-                                                <table className="min-w-full">
+                                                <table className="min-w-full divide-y divide-gray-200">
                                                     <thead className="bg-gray-50 sticky top-0">
                                                         <tr>
-                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Expense Type</th>
-                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Expense Name</th>
-                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Occurrence</th>
-                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Frequency</th>
-                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Date</th>
-                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Amount</th>
-                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Actions</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">ID No</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Doctor</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Patient</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Treatment</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Invoice Date</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Total Amount</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Paid Amount</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Remaining</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Status</th>
+                                                            <th className="px-6 py-3 text-left text-sm font-medium text-[#475467] uppercase tracking-wider">Action</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody className="bg-white divide-y divide-[#EAECF0]">
+                                                    <tbody className="bg-white divide-y divide-gray-200">
                                                         {expenses.length === 0 ? (
                                                             <tr>
-                                                                <td colSpan={5} className="text-center py-8 text-gray-400 text-sm">
-                                                                    <div className="flex flex-col items-center justify-center">
-                                                                        <svg className="w-10 h-10 text-gray-300 mb-2" fill="none" viewBox="0 0 24 24">
-                                                                            <path
-                                                                                d="M12 9v4m0 4h.01"
-                                                                                stroke="currentColor"
-                                                                                strokeWidth={2}
-                                                                                strokeLinecap="round"
-                                                                                strokeLinejoin="round"
-                                                                            />
-                                                                            <circle cx={12} cy={12} r={10} stroke="currentColor" strokeWidth={2} />
-                                                                        </svg>
-                                                                        <p>No expenses found</p>
-                                                                    </div>
+                                                                <td colSpan={9} className="text-center py-8 text-gray-400 text-sm">
+                                                                    No expenses found
                                                                 </td>
                                                             </tr>
                                                         ) : (
                                                             expenses.map((expense) => (
                                                                 <tr key={expense.id} className="hover:bg-gray-50">
-                                                                    <td className="px-6 py-4 text-sm text-[#475467] whitespace-nowrap">{expense.title}</td>
-                                                                    <td className="px-6 py-4 text-sm text-[#475467] whitespace-nowrap">{expense.category}</td>
-                                                                    <td className="px-6 py-4 text-sm text-[#475467] whitespace-nowrap">{expense.date}</td>
-                                                                    <td className="px-6 py-4 text-sm text-[#475467] whitespace-nowrap">{expense.amount}</td>
-                                                                    <td className="px-6 py-4 text-sm text-[#475467] whitespace-nowrap">{expense.dates}</td>
-                                                                    <td className="px-6 py-4 text-sm text-[#475467] whitespace-nowrap">{expense.paid}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{expense.id}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{expense.doctor}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{expense.patient}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{expense.treatment}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{expense.invoiceDate}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Rs {expense.totalAmount}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">$ {expense.paidAmount}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">$ {expense.remaining}</td>
+                                                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                                        <span
+                                                                            className={`px-3 py-1 rounded-full text-xs font-semibold ${expense.remaining > 0
+                                                                                ? "bg-[#FFF8F8] text-[#CE2D2D] border border-[#E43F33] rounded-sm pl-4 pr-4 pt-2 pb-2"
+                                                                                : "bg-[#F8FFF8] text-[#177606] border border-[#B7EFAB] rounded-sm pl-4 pr-4 pt-2 pb-2"
+                                                                                }`}
+                                                                        >
+                                                                            {expense.remaining > 0 ? "Unpaid" : "Paid"}
+                                                                        </span>
+                                                                    </td>
                                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                                         <div className="flex items-center space-x-2">
                                                                             <button
-                                                                                className="text-blue-600 hover:text-blue-800"
-
-                                                                            >
+                                                                                className="text-blue-600 hover:text-blue-800" onClick={() => {
+                                                                                    setShowExpenseModal(true);
+                                                                                    setTimeout(() => setExpenseModalAnimation(true), 10);
+                                                                                }}>
                                                                                 <svg
-                                                                                    width={22}
-                                                                                    height={23}
-                                                                                    viewBox="0 0 22 23"
+                                                                                    width={24}
+                                                                                    height={25}
+                                                                                    viewBox="0 0 24 25"
                                                                                     fill="none"
                                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                                 >
                                                                                     <path
-                                                                                        d="M3.21424 16.5816L3.92575 16.8188L3.21424 16.5816ZM4.06269 14.0363L3.35118 13.7991H3.35118L4.06269 14.0363ZM4.93817 12.6197L5.46849 13.1501L5.4685 13.1501L4.93817 12.6197ZM13.3932 4.16469L12.8629 3.63436V3.63436L13.3932 4.16469ZM17.9232 8.69468L18.4535 9.22501L17.9232 8.69468ZM9.46815 17.1497L8.93782 16.6194L8.93782 16.6194L9.46815 17.1497ZM8.05161 18.0252L8.28878 18.7367H8.28878L8.05161 18.0252ZM5.50626 18.8736L5.74343 19.5852H5.74343L5.50626 18.8736ZM9.00378 17.5832L8.5521 16.9844L8.5521 16.9844L9.00378 17.5832ZM8.64697 17.8037L8.31344 17.1319L8.64697 17.8037ZM19.0145 5.42399L18.3425 5.75701L18.3425 5.75701L19.0145 5.42399ZM19.0145 7.43538L18.3425 7.10237H18.3425L19.0145 7.43538ZM14.6525 3.07341L14.9855 3.74542L14.9855 3.74542L14.6525 3.07341ZM16.6639 3.07341L16.3309 3.74542V3.74542L16.6639 3.07341ZM4.2842 13.4409L4.95596 13.7745L4.95596 13.7745L4.2842 13.4409ZM4.50473 13.0841L3.90599 12.6324L3.90599 12.6324L4.50473 13.0841ZM2.79217 18.6094L2.08574 18.8613L2.79217 18.6094ZM3.47849 19.2957L3.22658 20.0022L3.22658 20.0022L3.47849 19.2957ZM12.791 4.7669C12.4981 4.47401 12.0233 4.47401 11.7304 4.7669C11.4375 5.05979 11.4375 5.53467 11.7304 5.82756L12.791 4.7669ZM16.2604 10.3575C16.5533 10.6504 17.0281 10.6504 17.321 10.3575C17.6139 10.0647 17.6139 9.58978 17.321 9.29689L16.2604 10.3575ZM3.21424 16.5816L3.92575 16.8188L4.77421 14.2734L4.06269 14.0363L3.35118 13.7991L2.50273 16.3445L3.21424 16.5816ZM4.93817 12.6197L5.4685 13.1501L13.9235 4.69502L13.3932 4.16469L12.8629 3.63436L4.40784 12.0894L4.93817 12.6197ZM17.9232 8.69468L17.3929 8.16435L8.93782 16.6194L9.46815 17.1497L9.99848 17.6801L18.4535 9.22501L17.9232 8.69468ZM8.05161 18.0252L7.81444 17.3137L5.26908 18.1621L5.50626 18.8736L5.74343 19.5852L8.28878 18.7367L8.05161 18.0252ZM9.46815 17.1497L8.93782 16.6194C8.69806 16.8592 8.62681 16.9281 8.5521 16.9844L9.00378 17.5832L9.45546 18.1819C9.63266 18.0482 9.78703 17.8915 9.99849 17.6801L9.46815 17.1497ZM8.05161 18.0252L8.28878 18.7367C8.57248 18.6421 8.78168 18.5742 8.98049 18.4754L8.64697 17.8037L8.31344 17.1319C8.22961 17.1735 8.13612 17.2065 7.81444 17.3137L8.05161 18.0252ZM9.00378 17.5832L8.5521 16.9844C8.47728 17.0409 8.39738 17.0902 8.31344 17.1319L8.64697 17.8037L8.98049 18.4754C9.14755 18.3925 9.30656 18.2942 9.45546 18.1819L9.00378 17.5832ZM17.9232 4.16469L17.3929 4.69502C18.0532 5.35534 18.2459 5.56203 18.3425 5.75701L19.0145 5.42399L19.6865 5.09098C19.453 4.61984 19.0282 4.20904 18.4535 3.63436L17.9232 4.16469ZM17.9232 8.69468L18.4535 9.22501C19.0282 8.65034 19.453 8.23954 19.6865 7.76839L19.0145 7.43538L18.3425 7.10237C18.2459 7.29734 18.0532 7.50404 17.3929 8.16435L17.9232 8.69468ZM19.0145 5.42399L18.3425 5.75701C18.5525 6.18087 18.5525 6.67851 18.3425 7.10237L19.0145 7.43538L19.6865 7.76839C20.1045 6.92487 20.1045 5.93451 19.6865 5.09098L19.0145 5.42399ZM13.3932 4.16469L13.9235 4.69502C14.5838 4.03471 14.7905 3.84204 14.9855 3.74542L14.6525 3.07341L14.3195 2.40139C13.8484 2.63486 13.4375 3.05969 12.8629 3.63436L13.3932 4.16469ZM17.9232 4.16469L18.4535 3.63436C17.8789 3.05969 17.4681 2.63487 16.9969 2.40139L16.6639 3.07341L16.3309 3.74542C16.5259 3.84204 16.7326 4.03471 17.3929 4.69502L17.9232 4.16469ZM14.6525 3.07341L14.9855 3.74542C15.4094 3.53538 15.907 3.53538 16.3309 3.74542L16.6639 3.07341L16.9969 2.40139C16.1534 1.98339 15.163 1.98339 14.3195 2.40139L14.6525 3.07341ZM4.06269 14.0363L4.77421 14.2734C4.88143 13.9518 4.91434 13.8583 4.95596 13.7745L4.2842 13.4409L3.61245 13.1074C3.51373 13.3062 3.44575 13.5154 3.35118 13.7991L4.06269 14.0363ZM4.93817 12.6197L4.40784 12.0894C4.19638 12.3009 4.03967 12.4552 3.90599 12.6324L4.50473 13.0841L5.10346 13.5358C5.15982 13.4611 5.22873 13.3898 5.46849 13.1501L4.93817 12.6197ZM4.2842 13.4409L4.95596 13.7745C4.99764 13.6905 5.04702 13.6106 5.10346 13.5358L4.50473 13.0841L3.90599 12.6324C3.79366 12.7813 3.69539 12.9403 3.61245 13.1074L4.2842 13.4409ZM3.21424 16.5816L2.50273 16.3445C2.32303 16.8836 2.17108 17.337 2.08557 17.7009C2.00268 18.0537 1.94406 18.464 2.08574 18.8613L2.79217 18.6094L3.49859 18.3575C3.50907 18.3869 3.47707 18.3366 3.5458 18.0441C3.61191 17.7627 3.7366 17.3863 3.92575 16.8188L3.21424 16.5816ZM5.50626 18.8736L5.26909 18.1621C4.70162 18.3513 4.32519 18.476 4.04382 18.5421C3.75133 18.6108 3.70101 18.5788 3.7304 18.5893L3.47849 19.2957L3.22658 20.0022C3.6239 20.1438 4.03418 20.0852 4.38695 20.0023C4.75085 19.9168 5.20433 19.7649 5.74343 19.5852L5.50626 18.8736ZM2.79217 18.6094L2.08574 18.8613C2.27553 19.3935 2.69435 19.8124 3.22658 20.0022L3.47849 19.2957L3.7304 18.5893C3.62226 18.5507 3.53716 18.4656 3.49859 18.3575L2.79217 18.6094ZM12.2607 5.29723L11.7304 5.82756L16.2604 10.3575L16.7907 9.82722L17.321 9.29689L12.791 4.7669L12.2607 5.29723Z"
+                                                                                        d="M7.01344 12.0879L11.8808 12.0879M6.86563 11.5176L3.15356 4.83788C2.59273 3.82868 3.67268 2.70107 4.70559 3.21737L20.3507 11.0376C21.2164 11.4704 21.2164 12.7054 20.3507 13.1381L4.70559 20.9584C3.67268 21.4747 2.59272 20.3471 3.15356 19.3379L6.86563 12.6581C7.06271 12.3035 7.06271 11.8723 6.86563 11.5176Z"
+                                                                                        stroke="#144A6C"
+                                                                                        strokeWidth="1.5"
+                                                                                        strokeLinecap="round"
+                                                                                    />
+                                                                                </svg>
+
+                                                                            </button>
+                                                                            <button
+                                                                                className="text-blue-600 hover:text-blue-800">
+                                                                                <svg
+                                                                                    width={24}
+                                                                                    height={25}
+                                                                                    viewBox="0 0 24 25"
+                                                                                    fill="none"
+                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                >
+                                                                                    <path
+                                                                                        d="M12.75 3.08789C12.75 2.67368 12.4142 2.33789 12 2.33789C11.5858 2.33789 11.25 2.67368 11.25 3.08789L12 3.08789L12.75 3.08789ZM11.25 14.0879C11.25 14.5021 11.5858 14.8379 12 14.8379C12.4142 14.8379 12.75 14.5021 12.75 14.0879H12H11.25ZM16.5303 12.6182C16.8232 12.3253 16.8232 11.8505 16.5303 11.5576C16.2374 11.2647 15.7626 11.2647 15.4697 11.5576L16 12.0879L16.5303 12.6182ZM12.7071 15.3808L12.1768 14.8505L12.7071 15.3808ZM11.2929 15.3808L11.8232 14.8505H11.8232L11.2929 15.3808ZM8.53033 11.5576C8.23744 11.2647 7.76256 11.2647 7.46967 11.5576C7.17678 11.8505 7.17678 12.3253 7.46967 12.6182L8 12.0879L8.53033 11.5576ZM3.75 16.0879C3.75 15.6737 3.41421 15.3379 3 15.3379C2.58579 15.3379 2.25 15.6737 2.25 16.0879H3H3.75ZM21.75 16.0879C21.75 15.6737 21.4142 15.3379 21 15.3379C20.5858 15.3379 20.25 15.6737 20.25 16.0879H21H21.75ZM19.362 20.7609L19.0215 20.0927L19.362 20.7609ZM20.673 19.4499L21.3413 19.7904V19.7904L20.673 19.4499ZM3.32698 19.4499L2.65873 19.7904L3.32698 19.4499ZM4.63803 20.7609L4.29754 21.4292H4.29754L4.63803 20.7609ZM12 3.08789L11.25 3.08789L11.25 14.0879H12H12.75L12.75 3.08789L12 3.08789ZM16 12.0879L15.4697 11.5576L12.1768 14.8505L12.7071 15.3808L13.2374 15.9111L16.5303 12.6182L16 12.0879ZM11.2929 15.3808L11.8232 14.8505L8.53033 11.5576L8 12.0879L7.46967 12.6182L10.7626 15.9111L11.2929 15.3808ZM12.7071 15.3808L12.1768 14.8505C12.0791 14.9481 11.9209 14.9481 11.8232 14.8505L11.2929 15.3808L10.7626 15.9111C11.446 16.5945 12.554 16.5945 13.2374 15.9111L12.7071 15.3808ZM3 16.0879H2.25V16.2879H3H3.75V16.0879H3ZM7.8 21.0879V21.8379H16.2V21.0879V20.3379H7.8V21.0879ZM21 16.2879H21.75V16.0879H21H20.25V16.2879H21ZM16.2 21.0879V21.8379C17.0277 21.8379 17.6936 21.8385 18.2315 21.7945C18.7781 21.7499 19.2582 21.6555 19.7025 21.4292L19.362 20.7609L19.0215 20.0927C18.824 20.1933 18.5632 20.2624 18.1093 20.2995C17.6467 20.3373 17.0525 20.3379 16.2 20.3379V21.0879ZM21 16.2879H20.25C20.25 17.1403 20.2494 17.7346 20.2116 18.1972C20.1745 18.6511 20.1054 18.9119 20.0048 19.1094L20.673 19.4499L21.3413 19.7904C21.5676 19.3461 21.662 18.866 21.7066 18.3194C21.7506 17.7815 21.75 17.1156 21.75 16.2879H21ZM19.362 20.7609L19.7025 21.4292C20.4081 21.0696 20.9817 20.496 21.3413 19.7904L20.673 19.4499L20.0048 19.1094C19.789 19.5327 19.4448 19.8769 19.0215 20.0927L19.362 20.7609ZM3 16.2879H2.25C2.25 17.1156 2.24942 17.7815 2.29336 18.3194C2.33803 18.866 2.43238 19.3461 2.65873 19.7904L3.32698 19.4499L3.99524 19.1094C3.8946 18.9119 3.82546 18.6511 3.78838 18.1972C3.75058 17.7346 3.75 17.1403 3.75 16.2879H3ZM7.8 21.0879V20.3379C6.94755 20.3379 6.35331 20.3373 5.89068 20.2995C5.4368 20.2624 5.17604 20.1933 4.97852 20.0927L4.63803 20.7609L4.29754 21.4292C4.74175 21.6555 5.22189 21.7499 5.76853 21.7945C6.30641 21.8385 6.9723 21.8379 7.8 21.8379V21.0879ZM3.32698 19.4499L2.65873 19.7904C3.01825 20.496 3.59193 21.0696 4.29754 21.4292L4.63803 20.7609L4.97852 20.0927C4.55516 19.8769 4.21095 19.5327 3.99524 19.1094L3.32698 19.4499Z"
                                                                                         fill="#144A6C"
                                                                                     />
                                                                                 </svg>
+
                                                                             </button>
                                                                             <button
                                                                                 className="text-red-600 hover:text-red-800"
@@ -2946,7 +2891,6 @@ export default function Patient() {
                                                         )}
                                                     </tbody>
                                                 </table>
-
                                             </div>
                                         </div>
                                     </div>
