@@ -260,7 +260,6 @@ export default function Patient() {
         { id: 3, name: "Bandages" },
         { id: 4, name: "Face Masks" },
     ];
-    //   const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [selectedCostType, setSelectedCostType] = useState(costTypes[0]);
     const [searchTerm, setSearchTerm] = useState("");
     const filteredDoctors = doctors.filter((doctor) =>
@@ -402,61 +401,11 @@ export default function Patient() {
                                                                     >
                                                                         Material Name
                                                                     </label>
-                                                                    <Listbox
-                                                                    // value={selectedMaterial}
-                                                                    // onChange={setSelectedMaterial}
-                                                                    >
-                                                                        <div className="mt-2 relative">
-                                                                            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-3 pl-3 pr-10 text-left shadow-sm border border-[#EBEBEB] focus:outline-none focus:ring-1 focus:ring-[#EBEBEB] focus:border-[#EBEBEB] sm:text-sm">
-                                                                                {/* <span className="block truncate">
-                                          {selectedMaterial?.name ||
-                                            "Select material"}
-                                        </span> */}
-                                                                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                                                                    <ChevronDownIcon
-                                                                                        className="h-5 w-5 text-[#144A6C]"
-                                                                                        aria-hidden="true"
-                                                                                    />
-                                                                                </span>
-                                                                            </Listbox.Button>
-
-                                                                            <Listbox.Options className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                                                                {materialList.map((material) => (
-                                                                                    <Listbox.Option
-                                                                                        key={material.id}
-                                                                                        value={material}
-                                                                                        className={({ active }) =>
-                                                                                            `relative cursor-default select-none py-2 pl-10 pr-4 ${active
-                                                                                                ? "bg-[#144A6C] text-white"
-                                                                                                : "text-gray-900"
-                                                                                            }`
-                                                                                        }
-                                                                                    >
-                                                                                        {({ selected }) => (
-                                                                                            <>
-                                                                                                <span
-                                                                                                    className={`block truncate ${selected
-                                                                                                            ? "font-medium"
-                                                                                                            : "font-normal"
-                                                                                                        }`}
-                                                                                                >
-                                                                                                    {material.name}
-                                                                                                </span>
-                                                                                                {selected && (
-                                                                                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#144A6C]">
-                                                                                                        <CheckIcon
-                                                                                                            className="h-5 w-5"
-                                                                                                            aria-hidden="true"
-                                                                                                        />
-                                                                                                    </span>
-                                                                                                )}
-                                                                                            </>
-                                                                                        )}
-                                                                                    </Listbox.Option>
-                                                                                ))}
-                                                                            </Listbox.Options>
-                                                                        </div>
-                                                                    </Listbox>
+                                                                      <input
+                                                                        className="mt-2 block w-full shadow-sm text-gray-700 border rounded-lg py-3 pl-3 pr-10 leading-tight focus:outline-none focus:bg-white dark:border-[#EBEBEB]"
+                                                                        id="grid-address"
+                                                                        type="text"
+                                                                    />
                                                                 </div>
                                                             </div>
                                                             <div className="flex flex-wrap -mx-3 mt-2 mb-4">

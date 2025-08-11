@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Bell, Settings, User, ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -13,14 +14,8 @@ export default function Header({
   onToggleSidebar,
   isSidebarOpen,
 }: HeaderProps) {
-  // const [showNotifications, setShowNotifications] = useState(false);
-
-  // const notifications = [
-  //   { id: 1, message: "New appointment scheduled", time: "2 min ago" },
-  //   { id: 2, message: "Patient record updated", time: "5 min ago" },
-  //   { id: 3, message: "Inventory low alert", time: "10 min ago" },
-  //   { id: 4, message: "Payment received", time: "15 min ago" },
-  // ];
+ const pathname = usePathname();
+  const isActive = pathname === "/setting";
 
   return (
     <header className="box fixed top-0 left-0 right-0 z-1 bg-white px-4 mt-2 lg:px-8 py-4 flex items-center justify-between">
@@ -49,25 +44,25 @@ export default function Header({
         <nav className="hidden xl:flex items-center space-x-6">
           <div className="flex flex-wrap gap-4">
             <Link
-              href="/inventory/add"
+              href="/"
               className="w-44 text-[#144A6C] text-center font-regular transition-colors whitespace-nowrap bg-[#FAFAFA] px-4 py-2 rounded-lg shadow-sm border border-[#F0F0F0]"
             >
               Add Inventory
             </Link>
             <Link
-              href="/patients/add"
+              href="/"
               className="w-44 text-center text-[#144A6C] font-regular transition-colors whitespace-nowrap bg-[#FAFAFA] px-4 py-2 rounded-lg shadow-sm border border-[#F0F0F0]"
             >
               Add Patient
             </Link>
             <Link
-              href="/doctors/add"
+              href=""
               className="w-44 text-center text-[#144A6C] font-regular transition-colors whitespace-nowrap bg-[#FAFAFA] px-4 py-2 rounded-lg shadow-sm border border-[#F0F0F0]"
             >
               Add Doctor
             </Link>
             <Link
-              href="/clinics/add"
+              href=""
               className="w-44 text-center text-[#144A6C] font-regular transition-colors whitespace-nowrap bg-[#FAFAFA] px-4 py-2 rounded-lg shadow-sm border border-[#F0F0F0]"
             >
               Add Clinic
@@ -78,14 +73,18 @@ export default function Header({
       {/* Right side actions */}
       <div className="flex items-center space-x-2 lg:space-x-4">
         {/* Settings - Hidden on small screens */}
-        <Link
-          href="/setting"
-          className="w-none lg:w-[44] text-[#144A6C] text-center font-regular transition-colors whitespace-nowrap bg-[#FAFAFA] px-4 py-2 rounded-lg shadow-sm border border-[#F0F0F0] md:flex items-center space-x-2 text-center justify-center"
-        >
-          <Settings className="w-4 h-4" />
-          <span className="hidden lg:block">Settings</span>
-        </Link>
-
+           <Link
+      href="/setting"
+      className={`text-[#144A6C] text-center font-regular transition-colors whitespace-nowrap px-4 py-2 rounded-lg shadow-sm border md:flex items-center space-x-2 justify-center
+        ${
+          isActive
+            ? "bg-[#144A6C] border-[#144A6C] text-[#fff]"
+            : "bg-[#FAFAFA] border-[#F0F0F0]"
+        }`}
+    >
+      <Settings className="w-4 h-4" />
+      <span className="hidden lg:block">Settings</span>
+    </Link>
         {/* Notification Dropdown */}
         <div className="relative">
           <button
